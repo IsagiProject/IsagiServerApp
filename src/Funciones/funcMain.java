@@ -23,15 +23,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import Conexiones.Conexion;
+import ModeloBD_DTO.UsuarioDTO;
 import Usuarios.Camarero;
 import Usuarios.Cocinero;
 import Usuarios.Gerente;
-import Usuarios.Usuario;
 import Visual.Login;
 import Visual.Main;
 
 public class funcMain {
-	static ArrayList<Usuario> bbddUsuarios = new ArrayList<>();
+	static ArrayList<UsuarioDTO> bbddUsuarios = new ArrayList<>();
 
 	public static boolean emailValidator(String email) {
 
@@ -45,7 +45,7 @@ public class funcMain {
 			return false;
 	}
 
-	public static void actualizarDatos(ArrayList<Usuario> listaUsuarios) throws ClassNotFoundException, IOException {
+	public static void actualizarDatos(ArrayList<UsuarioDTO> listaUsuarios) throws ClassNotFoundException, IOException {
 		System.out.println("Actualizando...");
 		System.out.println(listaUsuarios.size());
 		try {
@@ -54,15 +54,15 @@ public class funcMain {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				System.out.println(rs.getString(1));
-				Usuario u = new Usuario(rs.getInt(6), rs.getString(2), rs.getString(4), rs.getString(1),
+				UsuarioDTO u = new UsuarioDTO(rs.getInt(6), rs.getString(2), rs.getString(4), rs.getString(1),
 						rs.getString(3));
 				u.setCategoria(rs.getString(5));
 				bbddUsuarios.add(u);
 			}
 
 			if (bbddUsuarios.size() <= listaUsuarios.size()) {
-				for (Usuario a : listaUsuarios) {
-					for (Usuario u : bbddUsuarios) {
+				for (UsuarioDTO a : listaUsuarios) {
+					for (UsuarioDTO u : bbddUsuarios) {
 						if (a.getCod_usu() == u.getCod_usu()) {
 							funcLogin.stm.executeUpdate("Update usuarios set mail='" + a.getMail() + "',nom_usu= '"
 									+ a.getNom_usu() + "', " + "ape_usu= '" + a.getApe_usu() + "', password='"
@@ -93,7 +93,7 @@ public class funcMain {
 
 	}
 
-	public static void AddUsu(ArrayList<Usuario> listaUsuarios, File fichero, String nom, String ape, String password,
+	public static void AddUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, String nom, String ape, String password,
 			String cat, String mail, boolean conectado) throws SQLException {
 		if (conectado) {
 			PreparedStatement pInsertOid = Conexion.getConnection().prepareStatement(
@@ -145,7 +145,7 @@ public class funcMain {
 
 	}
 
-	public static void EliminarUsu(ArrayList<Usuario> listaUsuarios, File fichero, int usu, boolean conectado) {
+	public static void EliminarUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, int usu, boolean conectado) {
 		int codusu = 1000000;
 		try {
 
@@ -177,16 +177,16 @@ public class funcMain {
 
 	}
 
-	public static void CargarDatos(ArrayList<Usuario> listaUsuarios, File fichero, boolean conectado)
+	public static void CargarDatos(ArrayList<UsuarioDTO> listaUsuarios, File fichero, boolean conectado)
 			throws IOException, ClassNotFoundException, SQLException {
 		try {
 			if (fichero.exists()) {
 				FileInputStream fie = new FileInputStream(fichero);
 				ObjectInputStream ois = new ObjectInputStream(fie);
 
-				Usuario a;
+				UsuarioDTO a;
 				while (true) {
-					a = (Usuario) ois.readObject();
+					a = (UsuarioDTO) ois.readObject();
 					listaUsuarios.add(a);
 					System.out.println(a.toString() + " " + a.getCategoria());
 				}
@@ -208,12 +208,12 @@ public class funcMain {
 		}
 	}
 
-	public static void GuardarLista(ArrayList<Usuario> listaUsuarios, File fichero) throws SQLException {
+	public static void GuardarLista(ArrayList<UsuarioDTO> listaUsuarios, File fichero) throws SQLException {
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream("FicheroUsuarios.obj");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			for (Usuario a : listaUsuarios) {
+			for (UsuarioDTO a : listaUsuarios) {
 				oos.writeObject(a);
 			}
 			oos.close();
@@ -224,7 +224,7 @@ public class funcMain {
 
 	}
 
-	public static void ModificarUsu(ArrayList<Usuario> listaUsuarios, File fichero, int usu, boolean conectado,
+	public static void ModificarUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, int usu, boolean conectado,
 			String mail, String name, String lastname, String password, String job) throws SQLException {
 		int codusu = 10000000;
 
@@ -275,7 +275,7 @@ public class funcMain {
 		Main.table.setModel(usuarios);
 		TableModel datos = Main.table.getModel();
 		for (int i = 0; i < Main.listaUsuarios.size(); i++) {
-			Usuario u = (Usuario) (Main.listaUsuarios.get(i));
+			UsuarioDTO u = (UsuarioDTO) (Main.listaUsuarios.get(i));
 			usuarios.setValueAt(u.getCod_usu(), i, 0);
 			usuarios.setValueAt(u.getMail(), i, 1);
 			usuarios.setValueAt(u.getNom_usu(), i, 2);

@@ -1,6 +1,8 @@
 package Usuarios;
 
-public class Cocinero extends Usuario {
+import ModeloBD_DTO.UsuarioDTO;
+
+public class Cocinero extends UsuarioDTO {
 	String categoria;
 
 	/**

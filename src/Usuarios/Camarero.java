@@ -1,6 +1,8 @@
 package Usuarios;
 
-public class Camarero extends Usuario{
+import ModeloBD_DTO.UsuarioDTO;
+
+public class Camarero extends UsuarioDTO{
 	private static final long serialVersionUID = 1L;
 	String categoria;
 	public Camarero( int cod_usu,String nom_usu, String ape_usu, String mail, String password) {

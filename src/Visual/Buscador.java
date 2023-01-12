@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import Funciones.funcMain;
-import Usuarios.Usuario;
+import ModeloBD_DTO.UsuarioDTO;
 
 import java.awt.Color;
 import java.awt.Font;

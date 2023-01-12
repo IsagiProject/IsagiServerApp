@@ -20,8 +20,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import Conexiones.Server;
-
-import Usuarios.Usuario;
+import ModeloBD_DTO.UsuarioDTO;
 
 import java.awt.Dimension;
 import javax.swing.JTable;

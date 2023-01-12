@@ -22,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 import Conexiones.Conexion;
 import Conexiones.Server;
 import Funciones.funcLogin;
-import Usuarios.Usuario;
+import ModeloBD_DTO.UsuarioDTO;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -284,7 +284,7 @@ public class Login extends JFrame implements ActionListener {
 				Main miMain;
 				try {
 					miMain = new Main();
-					for (Usuario u : miMain.listaUsuarios) {
+					for (UsuarioDTO u : miMain.listaUsuarios) {
 						if (u.getMail().equals(textField.getText()) && u.getPassword().equals(passwordField.getText())
 								&& u.getCategoria().equals("Gerente")) {
 							miMain.mailActual = u.getMail();

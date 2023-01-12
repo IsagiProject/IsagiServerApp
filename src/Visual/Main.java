@@ -40,10 +40,10 @@ import javax.swing.table.TableModel;
 import Usuarios.Camarero;
 import Usuarios.Cocinero;
 import Usuarios.Gerente;
-import Usuarios.Usuario;
 import Conexiones.Conexion;
 import Conexiones.Server;
 import Funciones.funcMain;
+import ModeloBD_DTO.UsuarioDTO;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -72,7 +72,7 @@ import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
 public class Main extends JFrame implements ActionListener {
-	public static ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+	public static ArrayList<UsuarioDTO> listaUsuarios = new ArrayList<>();
 	static int nextid;
 	static int filadev;
 	public static File fichero;

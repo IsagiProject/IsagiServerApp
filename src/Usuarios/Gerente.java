@@ -1,6 +1,8 @@
 package Usuarios;
 
-public class Gerente extends Usuario {
+import ModeloBD_DTO.UsuarioDTO;
+
+public class Gerente extends UsuarioDTO {
 	private static final long serialVersionUID = 1L;
 
 	String categoria;

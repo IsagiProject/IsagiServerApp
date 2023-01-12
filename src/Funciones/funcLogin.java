@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Conexiones.Conexion;
+import ModeloBD_DTO.UsuarioDTO;
 import Usuarios.Camarero;
-import Usuarios.Usuario;
 import Visual.Login;
 import Visual.Main;
 
