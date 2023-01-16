@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Server  extends Thread{
+public class Server extends Thread{
 
     static final int PUERTO = 5000;
     public static final String END_WORD = "END";
@@ -44,7 +44,6 @@ public class Server  extends Thread{
                 hilo.start();
             }
         } catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

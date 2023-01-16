@@ -1,54 +1,26 @@
 package Visual;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
-import Usuarios.Camarero;
-import Usuarios.Cocinero;
-import Usuarios.Gerente;
-import Conexiones.Conexion;
-import Conexiones.Server;
 import Funciones.funcMain;
+import ModeloBD_DAO.UsuarioDAO;
 import ModeloBD_DTO.UsuarioDTO;
 
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -56,17 +28,11 @@ import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JLabel;
 
-import javax.swing.border.BevelBorder;
 import java.awt.Color;
-import java.awt.Container;
-import javax.swing.border.LineBorder;
-import javax.swing.border.EtchedBorder;
 import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.border.MatteBorder;
-import java.awt.Rectangle;
 import java.awt.Cursor;
-import javax.swing.JSpinner;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
@@ -100,7 +66,7 @@ public class Main extends JFrame implements ActionListener {
 		listaUsuarios.clear();
 		fichero = new File("FicheroUsuarios.obj");
 		funcMain.CargarDatos(listaUsuarios, fichero, Login.conectado);
-		if(Login.conectado) {
+		if (Login.conectado) {
 			funcMain.actualizarDatos(listaUsuarios);
 		}
 		funcMain.actualizarLista();
@@ -431,9 +397,8 @@ public class Main extends JFrame implements ActionListener {
 		btnMostrar.addActionListener(this);
 
 		table.getRowSelectionAllowed();
-		}
-	
-	
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -468,13 +433,16 @@ public class Main extends JFrame implements ActionListener {
 				// camarero, gerente o cocinero
 
 				if (comboBox.getSelectedItem().toString() == "Camarero") {
-					funcMain.AddUsu(listaUsuarios, fichero,textName.getText() , textLastName.getText(), textPassword.getText(),"Camarero" ,textMail.getText(), Login.conectado);
+					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
+							textPassword.getText(), "Camarero", textMail.getText(), Login.conectado);
 					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
 				} else if (comboBox.getSelectedItem().toString() == "Cocinero") {
-					funcMain.AddUsu(listaUsuarios, fichero,textName.getText() , textLastName.getText(), textPassword.getText(),"Cocinero" ,textMail.getText(),  Login.conectado);
+					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
+							textPassword.getText(), "Cocinero", textMail.getText(), Login.conectado);
 					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
 				} else if (comboBox.getSelectedItem().toString() == "Gerente") {
-					funcMain.AddUsu(listaUsuarios, fichero,textName.getText() , textLastName.getText(), textPassword.getText(),"Gerente" ,textMail.getText(),  Login.conectado);
+					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
+							textPassword.getText(), "Gerente", textMail.getText(), Login.conectado);
 					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
 				}
 				btnModificar.setEnabled(false);
@@ -528,6 +496,9 @@ public class Main extends JFrame implements ActionListener {
 
 			}
 			if (btnModificar == e.getSource()) {
+				for (UsuarioDTO usuarioDTO : new UsuarioDAO().listarTodos()) {
+					System.out.println("[Modificar]" + usuarioDTO.toString());
+				}
 				int resp = JOptionPane.showConfirmDialog(
 						null, "Seguro que quiere modificar los datos de "
 								+ table.getModel().getValueAt(filadev, 2).toString() + "?",

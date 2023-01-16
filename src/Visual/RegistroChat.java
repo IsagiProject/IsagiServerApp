@@ -2,8 +2,6 @@ package Visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -17,11 +15,7 @@ import java.io.FileReader;
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
 import Conexiones.Server;
-import ModeloBD_DTO.UsuarioDTO;
-
 import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;

@@ -1,26 +1,18 @@
 package Visual;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import java.awt.Image;
 import javax.swing.ImageIcon;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Conexiones.Conexion;
-import Conexiones.Server;
 import Funciones.funcLogin;
 import ModeloBD_DTO.UsuarioDTO;
 
@@ -30,20 +22,12 @@ import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.HeadlessException;
-import java.awt.Window.Type;
-import javax.swing.UIManager;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import java.awt.Toolkit;
-import javax.swing.border.BevelBorder;
-import javax.swing.SwingConstants;
 import java.awt.Cursor;
-import javax.swing.border.TitledBorder;
 import java.awt.Dimension;
-import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.awt.event.MouseEvent;
 import javax.swing.border.MatteBorder;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -61,12 +45,10 @@ public class Login extends JFrame implements ActionListener {
 	 * Launch the application.
 	 * 
 	 * @throws SQLException
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-		
-
 		int resp = JOptionPane.showConfirmDialog(null, "Quiere conectarse al servidor?", "Conexion",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
@@ -242,7 +224,7 @@ public class Login extends JFrame implements ActionListener {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void actionPerformed(ActionEvent e){
+	public void actionPerformed(ActionEvent e) {
 		if (btnRegistrar == e.getSource()) {
 			Registrarse r;
 			try {
@@ -250,20 +232,18 @@ public class Login extends JFrame implements ActionListener {
 				r.setVisible(true);
 				dispose();
 			} catch (ClassNotFoundException | IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 		}
 		if (conectado) {
 			if (btnEntrar == e.getSource()) {
 				Main miMain;
 				try {
 					miMain = new Main();
-
+					
 					if (funcLogin.cargarServer(textField.getText(), passwordField.getText()) == true) {
 						JOptionPane.showMessageDialog(null, "Datos correctos, bienvenido", "Bienvenido",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -298,10 +278,8 @@ public class Login extends JFrame implements ActionListener {
 					passwordField.setText("");
 					textField.grabFocus();
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 

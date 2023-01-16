@@ -18,16 +18,19 @@ public class UsuarioDAO implements PatronDAO<UsuarioDTO> {
     private static final Connection con = Conexion.getInstancia().getCon();
 
     @Override
-    public boolean insertar(UsuarioDTO t) {
+    public Object insertar(UsuarioDTO t) {
         try {
-            PreparedStatement ps = con.prepareStatement(SQL_INSERT);
+            PreparedStatement ps = con.prepareStatement(SQL_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, t.getMail());
-            ps.setString(2, t.getNom_usu());
+            ps.setString(2, t.getNom_usu());    
             ps.setString(3, t.getApe_usu());
             ps.setString(4, t.getPassword());
             ps.setString(5, t.getCategoria());
+            System.out.println("[Insertar] Trace" + Thread.currentThread().getStackTrace());
+            System.out.println("[Insertar] Registros: " + this.listarTodos().size());
+            System.out.println("[Insertar] Datos: " + t);
             if (ps.executeUpdate() > 0) {
-                return true;
+                return ps.getGeneratedKeys();
             }
         } catch (Exception e) {
             e.printStackTrace();

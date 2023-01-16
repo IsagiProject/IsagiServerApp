@@ -10,11 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,11 +20,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import Conexiones.Conexion;
+import ModeloBD_DAO.UsuarioDAO;
 import ModeloBD_DTO.UsuarioDTO;
 import Usuarios.Camarero;
 import Usuarios.Cocinero;
 import Usuarios.Gerente;
-import Visual.Login;
 import Visual.Main;
 
 public class funcMain {
@@ -50,13 +47,17 @@ public class funcMain {
 		System.out.println(listaUsuarios.size());
 		try {
 			bbddUsuarios.clear();
-			PreparedStatement ps = Conexion.getConnection().prepareStatement("select * from usuarios");
+			PreparedStatement ps = Conexion.getInstancia().getCon().prepareStatement("select * from usuarios");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				System.out.println(rs.getString(1));
-				UsuarioDTO u = new UsuarioDTO(rs.getInt(6), rs.getString(2), rs.getString(4), rs.getString(1),
-						rs.getString(3));
-				u.setCategoria(rs.getString(5));
+				UsuarioDTO u = new UsuarioDTO(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getString(3),
+						rs.getString(4),
+						rs.getString(5),
+						rs.getString(6));
 				bbddUsuarios.add(u);
 			}
 
@@ -64,48 +65,37 @@ public class funcMain {
 				for (UsuarioDTO a : listaUsuarios) {
 					for (UsuarioDTO u : bbddUsuarios) {
 						if (a.getCod_usu() == u.getCod_usu()) {
-							funcLogin.stm.executeUpdate("Update usuarios set mail='" + a.getMail() + "',nom_usu= '"
-									+ a.getNom_usu() + "', " + "ape_usu= '" + a.getApe_usu() + "', password='"
-									+ a.getPassword() + "', categoria='" + a.getCategoria() + "' " + "where cod_usu="
-									+ u.getCod_usu() + ";");
+							new UsuarioDAO().actualizar(a);
 							System.out.println(a.toString());
 							System.out.println("Se modifico un usuario");
 						} else {
-							PreparedStatement pInsertOid = Conexion.getConnection().prepareStatement(
-									"INSERT INTO usuarios (`mail`, `nom_usu`, `password`, `ape_usu`, `categoria`) VALUES ( '"
-											+ a.getMail() + "','" + a.getNom_usu()
-											+ "'," + " '" + a.getPassword() + "', '"
-											+ a.getApe_usu() + "', '"
-											+ a.getCategoria() + "')",
-									Statement.RETURN_GENERATED_KEYS);
-							pInsertOid.executeUpdate();
-							rs = pInsertOid.getGeneratedKeys();
+							new UsuarioDAO().insertar(a);
 							System.out.println("Se agrego un usuario");
 						}
 					}
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("No se ha actualizado");
 			e.printStackTrace();
 		}
 
 	}
 
-	public static void AddUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, String nom, String ape, String password,
+	public static void AddUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, String nom, String ape,
+			String password,
 			String cat, String mail, boolean conectado) throws SQLException {
 		if (conectado) {
-			PreparedStatement pInsertOid = Conexion.getConnection().prepareStatement(
-					"INSERT INTO `usuarios`(`mail`, `nom_usu`, `password`, `ape_usu`, `categoria`) VALUES ( '" + mail
-							+ "','" + nom + "'," + " '" + password + "', '" + ape + "', '" + cat + "')",
-					Statement.RETURN_GENERATED_KEYS);
-			pInsertOid.executeUpdate();
-			ResultSet rs = pInsertOid.getGeneratedKeys();
+			UsuarioDTO user = new UsuarioDTO();
+			user.setNom_usu(nom);
+			user.setApe_usu(ape);
+			user.setMail(mail);
+			user.setPassword(password);
+			user.setCategoria(cat);
+			ResultSet rs = (ResultSet) new UsuarioDAO().insertar(user);
 			if (rs.next()) {
 				if (cat.equals("Camarero")) {
 					Camarero u = new Camarero(rs.getInt(1), nom, ape, mail, password);
-
 					System.out.print("" + u.toString());
 					listaUsuarios.add(u);
 				} else if (cat.equals("Cocinero")) {
@@ -156,8 +146,7 @@ public class funcMain {
 				return;
 			}
 			if (conectado) {
-
-				funcLogin.stm.executeUpdate("DELETE FROM usuarios WHERE cod_usu = " + codusu + ";");
+				new UsuarioDAO().borrar(codusu);
 				actualizarLista();
 				GuardarLista(listaUsuarios, fichero);
 			}
@@ -171,7 +160,6 @@ public class funcMain {
 			JOptionPane.showMessageDialog(null, "Elije primero un registro de la tabla", "Aviso",
 					JOptionPane.ERROR_MESSAGE);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -218,7 +206,6 @@ public class funcMain {
 			}
 			oos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -226,23 +213,19 @@ public class funcMain {
 
 	public static void ModificarUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, int usu, boolean conectado,
 			String mail, String name, String lastname, String password, String job) throws SQLException {
-		int codusu = 10000000;
-
 		try {
-			codusu = listaUsuarios.get(usu).getCod_usu();
+			UsuarioDTO usuario = listaUsuarios.get(usu);
 			if (conectado) {
 				try {
-					funcLogin.stm.executeUpdate("Update usuarios set mail='" + mail + "',nom_usu= '" + name + "', "
-							+ "ape_usu= '" + lastname + "', password='" + password + "', categoria='" + job + "' "
-							+ "where cod_usu=" + codusu + ";");
-					listaUsuarios.get(usu).setNom_usu(name);
-					listaUsuarios.get(usu).setMail(mail);
-					listaUsuarios.get(usu).setApe_usu(lastname);
-					listaUsuarios.get(usu).setPassword(password);
-					listaUsuarios.get(usu).setCategoria(job);
+					UsuarioDAO dao = new UsuarioDAO();
+					usuario.setNom_usu(name);
+					usuario.setMail(mail);
+					usuario.setApe_usu(lastname);
+					usuario.setPassword(password);
+					usuario.setCategoria(job);
+					dao.actualizar(usuario);
 					GuardarLista(listaUsuarios, fichero);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -250,12 +233,12 @@ public class funcMain {
 
 				if (usu >= 0) {
 
-					listaUsuarios.get(usu).setNom_usu(name);
-					listaUsuarios.get(usu).setMail(mail);
-					listaUsuarios.get(usu).setApe_usu(lastname);
-					listaUsuarios.get(usu).setPassword(password);
-					listaUsuarios.get(usu).setCategoria(job);
-					System.out.println(listaUsuarios.get(usu).toString());
+					usuario.setNom_usu(name);
+					usuario.setMail(mail);
+					usuario.setApe_usu(lastname);
+					usuario.setPassword(password);
+					usuario.setCategoria(job);
+					System.out.println(usuario.toString());
 					GuardarLista(listaUsuarios, fichero);
 
 				}

@@ -1,18 +1,11 @@
 package Visual;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import Usuarios.Gerente;
-import Conexiones.Conexion;
 import Funciones.funcMain;
 
 import javax.swing.JTextField;
@@ -30,7 +21,6 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
 import java.awt.Toolkit;
-import javax.swing.border.BevelBorder;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
@@ -269,7 +259,6 @@ public class Registrarse extends JFrame implements ActionListener {
 				miLogin.setVisible(true);
 				dispose();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
