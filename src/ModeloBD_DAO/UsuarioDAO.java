@@ -15,6 +15,7 @@ public class UsuarioDAO implements PatronDAO<UsuarioDTO> {
     private static final String SQL_UPDATE = "UPDATE USUARIOS SET mail = ?, nom_usu = ?, ape_usu = ?, password = ?, categoria = ? WHERE cod_usu = ?;";
     private static final String SQL_FIND = "SELECT * FROM USUARIOS WHERE cod_usu = ?;";
     private static final String SQL_FIND_ALL = "SELECT * FROM USUARIOS;";
+    private static final String SQL_FIND_ALL_BY_MAIL = "SELECT * FROM USUARIOS WHERE mail = ?;";
     private static final Connection con = Conexion.getInstancia().getCon();
 
     @Override
@@ -22,21 +23,17 @@ public class UsuarioDAO implements PatronDAO<UsuarioDTO> {
         try {
             PreparedStatement ps = con.prepareStatement(SQL_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, t.getMail());
-            ps.setString(2, t.getNom_usu());    
+            ps.setString(2, t.getNom_usu());
             ps.setString(3, t.getApe_usu());
             ps.setString(4, t.getPassword());
             ps.setString(5, t.getCategoria());
-            System.out.println("[Insertar] Trace" + Thread.currentThread().getStackTrace());
-            System.out.println("[Insertar] Registros: " + this.listarTodos().size());
-            System.out.println("[Insertar] Datos: " + t);
             if (ps.executeUpdate() > 0) {
                 return ps.getGeneratedKeys();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
-
+        return null;
     }
 
     @Override
@@ -113,5 +110,19 @@ public class UsuarioDAO implements PatronDAO<UsuarioDTO> {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public boolean existeMail(String email) {
+        try {
+            PreparedStatement ps = con.prepareStatement(SQL_FIND_ALL_BY_MAIL);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

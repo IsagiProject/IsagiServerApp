@@ -11,11 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import Conexiones.Server;
+import ModeloBD_DAO.UsuarioDAO;
+import ModeloBD_DTO.UsuarioDTO;
+
 import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -119,10 +123,11 @@ public class RegistroChat extends JDialog implements ActionListener {
 		scrollPaneTabla.setViewportView(table);
 
 		comboBox = new JComboBox();
-		usus = new String[Main.listaUsuarios.size() + 1];
+		ArrayList<UsuarioDTO> usuarios = new UsuarioDAO().listarTodos();
+		usus = new String[usuarios.size() + 1];
 		usus[0] = "Todos";
-		for (int i = 0; i < Main.listaUsuarios.size(); i++) {
-			usus[i + 1] = Main.listaUsuarios.get(i).getMail();
+		for (int i = 0; i < usuarios.size(); i++) {
+			usus[i + 1] = usuarios.get(i).getMail();
 		}
 		comboBox.setModel(new DefaultComboBoxModel(usus));
 		comboBox.setForeground(new Color(0, 0, 31));
@@ -150,13 +155,12 @@ public class RegistroChat extends JDialog implements ActionListener {
 				// 0: user 1: LocalDateTime 2: C/
 				String[] data = row.split(",");
 				Object[] fila = new Object[numCols];
-//	            	 fila[0]=data[0];
-//	        
-//		              usuarios.setValueAt(data[0], i,0);
-//		             usuarios.setValueAt(data[1], i,1);
-//		              usuarios.setValueAt(data[2], i,2);
+				// fila[0]=data[0];
+				//
+				// usuarios.setValueAt(data[0], i,0);
+				// usuarios.setValueAt(data[1], i,1);
+				// usuarios.setValueAt(data[2], i,2);
 				usuarios.addRow(data);
-				System.out.print(rootPaneCheckingEnabled);
 				// do something with the data
 			}
 			csvReader.close();
@@ -185,8 +189,6 @@ public class RegistroChat extends JDialog implements ActionListener {
 						Object[] fila = new Object[numCols];
 						if (comboBox.getSelectedItem().toString().equals(data[0])) {
 							usuarios.addRow(data);
-							System.out.print(rootPaneCheckingEnabled);
-							System.out.print(data[0]);
 							i++;
 						}
 					}

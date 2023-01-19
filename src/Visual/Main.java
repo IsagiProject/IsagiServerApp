@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import Funciones.funcLogin;
 import Funciones.funcMain;
 import ModeloBD_DAO.UsuarioDAO;
 import ModeloBD_DTO.UsuarioDTO;
@@ -38,9 +39,12 @@ import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
 public class Main extends JFrame implements ActionListener {
-	public static ArrayList<UsuarioDTO> listaUsuarios = new ArrayList<>();
+	// public static ArrayList<UsuarioDTO> old___listaUsuarios = new ArrayList<>();
+	static UsuarioDAO usuarioDAO = new UsuarioDAO();
 	static int nextid;
-	static int filadev;
+	public static int filadev;
+	static String selectedMail;
+	static int selectedId;
 	public static File fichero;
 	private JPanel contentPane;
 	JButton btnAnadir, btnMostrar;
@@ -63,14 +67,9 @@ public class Main extends JFrame implements ActionListener {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/Visual/cafetera.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		inicializarComponentes();
-		listaUsuarios.clear();
 		fichero = new File("FicheroUsuarios.obj");
-		funcMain.CargarDatos(listaUsuarios, fichero, Login.conectado);
-		if (Login.conectado) {
-			funcMain.actualizarDatos(listaUsuarios);
-		}
-		funcMain.actualizarLista();
 
+		funcMain.actualizarTabla();
 	}
 
 	public void inicializarComponentes() {
@@ -401,11 +400,8 @@ public class Main extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		try {
-
 			if (btnAnadir == e.getSource()) {
-
 				if (textMail.getText().equals("") || textName.getText().equals("") || textLastName.getText().equals("")
 						|| textPassword.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Relene los campos", "Limpieza",
@@ -413,15 +409,6 @@ public class Main extends JFrame implements ActionListener {
 					return;
 				}
 
-				for (int i = 0; i < listaUsuarios.size(); i++) {
-					if (listaUsuarios.get(i).getMail().equals(textMail.getText())) {
-						textMail.setText("");
-						JOptionPane.showMessageDialog(null, "Ya exisite ese correo", "Aviso",
-								JOptionPane.WARNING_MESSAGE);
-						textMail.grabFocus();
-						return;
-					}
-				}
 				if (!funcMain.emailValidator(textMail.getText())) {
 					JOptionPane.showMessageDialog(null, "Correo no valido", "Error", JOptionPane.ERROR_MESSAGE);
 					textMail.setText("");
@@ -429,128 +416,93 @@ public class Main extends JFrame implements ActionListener {
 					return;
 				}
 
-				// Crear tres if para crear tres tipos de usuarios diferentes y que llame a
-				// camarero, gerente o cocinero
-
-				if (comboBox.getSelectedItem().toString() == "Camarero") {
-					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
-							textPassword.getText(), "Camarero", textMail.getText(), Login.conectado);
-					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
-				} else if (comboBox.getSelectedItem().toString() == "Cocinero") {
-					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
-							textPassword.getText(), "Cocinero", textMail.getText(), Login.conectado);
-					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
-				} else if (comboBox.getSelectedItem().toString() == "Gerente") {
-					funcMain.AddUsu(listaUsuarios, fichero, textName.getText(), textLastName.getText(),
-							textPassword.getText(), "Gerente", textMail.getText(), Login.conectado);
-					comboBox.setSelectedIndex(comboBox.getSelectedIndex());
+				if (usuarioDAO.existeMail(textMail.getText())) {
+					JOptionPane.showMessageDialog(null, "El correo ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
-				btnModificar.setEnabled(false);
-				btnEliminar.setEnabled(false);
-				JOptionPane.showMessageDialog(null, "Se ha añadido un nuevo ");
-				funcMain.actualizarLista();
-				funcMain.GuardarLista(listaUsuarios, fichero);
-				textName.setText("");
-				textLastName.setText("");
-				textPassword.setText("");
-				textMail.setText("");
 
+				UsuarioDTO u = new UsuarioDTO(0, textName.getText(), textLastName.getText(), textMail.getText(),
+						textPassword.getText(), comboBox.getSelectedItem().toString());
+				usuarioDAO.insertar(u);
+				comboBox.setSelectedIndex(comboBox.getSelectedIndex());
+				funcMain.actualizarTabla();
+
+				JOptionPane.showMessageDialog(null, "Se ha añadido un nuevo");
+				resetModifyDelete();
 			}
+
 			if (btnRegistro == e.getSource()) {
 				new RegistroChat().setVisible(true);
-
 			}
+
 			if (btnEliminar == e.getSource()) {
-				int resp = JOptionPane.showConfirmDialog(null, "Seguro que quiere borrar este Registro?", "Aviso",
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				if (resp == 0) {
-					btnModificar.setEnabled(false);
-					funcMain.EliminarUsu(listaUsuarios, fichero, filadev, Login.conectado);
-
-				}
-				btnEliminar.setEnabled(false);
-				btnModificar.setEnabled(false);
-				textName.setText("");
-				textLastName.setText("");
-				textPassword.setText("");
-				textMail.setText("");
+				handleDetele();
 			}
+
 			if (btnLimpiar == e.getSource()) {
-				textName.setText("");
-				textLastName.setText("");
-				textMail.setText("");
-				textPassword.setText("");
-				JOptionPane.showMessageDialog(null, "Se han limpiado los campos", "Limpieza",
-						JOptionPane.INFORMATION_MESSAGE);
-				btnModificar.setEnabled(false);
-				btnEliminar.setEnabled(false);
+				handleClear();
 			}
-			if (btnMostrar == e.getSource()) {
-				listaUsuarios.clear();
-				btnModificar.setEnabled(true);
-				btnEliminar.setEnabled(true);
 
-				filadev = funcMain.mostrar(table.getSelectedRow());
-				funcMain.CargarDatos(listaUsuarios, fichero, Login.conectado);
-				funcMain.actualizarLista();
+			if (btnMostrar == e.getSource()) {
+				handleShow();
 
 			}
 			if (btnModificar == e.getSource()) {
-				for (UsuarioDTO usuarioDTO : new UsuarioDAO().listarTodos()) {
-					System.out.println("[Modificar]" + usuarioDTO.toString());
-				}
 				int resp = JOptionPane.showConfirmDialog(
-						null, "Seguro que quiere modificar los datos de "
-								+ table.getModel().getValueAt(filadev, 2).toString() + "?",
+						null, "Seguro que quiere modificar los datos de " + selectedMail + "?",
 						"Aviso", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				if (resp == 0) {
-					if (textMail.getText().equals("") || textName.getText().equals("")
-							|| textLastName.getText().equals("") || textPassword.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "Relene los campos", "Limpieza",
-								JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-					if (!funcMain.emailValidator(textMail.getText())) {
-						JOptionPane.showMessageDialog(null, "Correo no valido", "Error", JOptionPane.ERROR_MESSAGE);
-						textMail.setText("");
-						textMail.grabFocus();
-						return;
-					}
-					for (int i = 0; i < listaUsuarios.size(); i++) {
-						if (listaUsuarios.get(i).getMail().equals(textMail.getText())
-								&& !mailActual.equals(textMail.getText())) {
-							JOptionPane.showMessageDialog(null, "Ya exisite ese correo", "Aviso",
-									JOptionPane.WARNING_MESSAGE);
-							textMail.setText("");
-							textMail.grabFocus();
-							return;
-						}
-					}
 
-					funcMain.ModificarUsu(listaUsuarios, fichero, filadev, Login.conectado,
-							textMail.getText().toString(), textName.getText().toString(),
-							textLastName.getText().toString(), textPassword.getText().toString(),
-							comboBox.getSelectedItem().toString());
-					funcMain.actualizarLista();
+				if (resp == 1) {
+					resetModifyDelete();
+					return;
+				}
+
+				if (textMail.getText().equals("") || textName.getText().equals("")
+						|| textLastName.getText().equals("") || textPassword.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Relene los campos", "Limpieza",
+							JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+
+				if (!funcMain.emailValidator(textMail.getText())) {
+					JOptionPane.showMessageDialog(null, "Correo no valido", "Error", JOptionPane.ERROR_MESSAGE);
+					textMail.setText("");
+					textMail.grabFocus();
+					return;
+				}
+
+				if (Main.selectedMail.equals(funcLogin.mail) && !textMail.getText().equals(Main.selectedMail)) {
+					JOptionPane.showMessageDialog(null, "No puede cambiar su correo", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					textMail.setText(funcLogin.mail);
+					return;
+				}
+
+				// Si cambio el mail seleccionado
+				if (!textMail.getText().equals(Main.selectedMail) && usuarioDAO.existeMail(textMail.getText())) {
+					JOptionPane.showMessageDialog(null, "El correo ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				int codigo = (int) table.getValueAt(filadev, 0);
+				UsuarioDTO usuarioDTO = new UsuarioDTO();
+				usuarioDTO.setCod_usu(codigo);
+				usuarioDTO.setNom_usu(textName.getText());
+				usuarioDTO.setApe_usu(textLastName.getText());
+				usuarioDTO.setMail(textMail.getText());
+				usuarioDTO.setPassword(textPassword.getText());
+				usuarioDTO.setCategoria(comboBox.getSelectedItem().toString());
+
+				if (usuarioDAO.actualizar(usuarioDTO)) {
 					JOptionPane.showMessageDialog(null,
 							"Se ha modificado a " + table.getModel().getValueAt(filadev, 2).toString() + "",
 							"Modificacion", JOptionPane.INFORMATION_MESSAGE);
 				}
-				btnModificar.setEnabled(false);
-				btnEliminar.setEnabled(false);
-				textName.setText("");
-				textLastName.setText("");
-				textPassword.setText("");
-				textMail.setText("");
+				funcMain.actualizarTabla();
+				resetModifyDelete();
 			}
 			if (btnSalir == e.getSource()) {
-				int resp = JOptionPane.showConfirmDialog(null, "Quiere salir de la aplicacion?", "Salir",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (resp == 0) {
-					JOptionPane.showMessageDialog(null, "Que tenga un buen dia", "Adios",
-							JOptionPane.INFORMATION_MESSAGE);
-					dispose();
-				}
+				handleExit();
 			}
 			if (btnBuscarPorCodigo == e.getSource()) {
 				new Buscador().setVisible(true);
@@ -559,5 +511,59 @@ public class Main extends JFrame implements ActionListener {
 			e1.printStackTrace();
 		}
 
+	}
+
+	private void handleDetele() {
+		int resp = JOptionPane.showConfirmDialog(null, "Seguro que quiere borrar este Registro?", "Aviso",
+				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if (resp == 0) {
+			btnModificar.setEnabled(false);
+			usuarioDAO.borrar(selectedId);
+		}
+		resetModifyDelete();
+	}
+
+	private void handleExit() {
+		int resp = JOptionPane.showConfirmDialog(null, "Quiere salir de la aplicacion?", "Salir",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (resp == 0) {
+			JOptionPane.showMessageDialog(null, "Que tenga un buen dia", "Adios",
+					JOptionPane.INFORMATION_MESSAGE);
+			dispose();
+		}
+	}
+
+	private void resetModifyDelete() {
+		btnModificar.setEnabled(false);
+		btnEliminar.setEnabled(false);
+		textName.setText("");
+		textLastName.setText("");
+		textPassword.setText("");
+		textMail.setText("");
+	}
+
+	private void handleShow() {
+		btnModificar.setEnabled(true);
+		btnEliminar.setEnabled(true);
+		if (table.getSelectedRow() == -1) {
+			JOptionPane.showMessageDialog(null, "Seleccione una fila", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		selectedMail = table.getValueAt(table.getSelectedRow(), 1).toString();
+		selectedId = (int) table.getValueAt(table.getSelectedRow(), 0);
+
+		filadev = funcMain.mostrar(table.getSelectedRow());
+		funcMain.actualizarTabla();
+	}
+
+	private void handleClear() {
+		textName.setText("");
+		textLastName.setText("");
+		textMail.setText("");
+		textPassword.setText("");
+		JOptionPane.showMessageDialog(null, "Se han limpiado los campos", "Limpieza",
+				JOptionPane.INFORMATION_MESSAGE);
+		btnModificar.setEnabled(false);
+		btnEliminar.setEnabled(false);
 	}
 }

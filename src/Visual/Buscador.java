@@ -13,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import Funciones.funcMain;
+import ModeloBD_DAO.UsuarioDAO;
+import ModeloBD_DTO.UsuarioDTO;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -132,7 +134,6 @@ public class Buscador extends JDialog implements ActionListener {
 			buttonPane.setForeground(new Color(0, 0, 0));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			buttonPane.setLayout(null);
-
 		}
 	}
 
@@ -146,24 +147,17 @@ public class Buscador extends JDialog implements ActionListener {
 			}
 		}
 		if (okButton == e.getSource()) {
-			boolean found = false;
 			try {
-				for (int pos = 0; pos < Main.listaUsuarios.size(); pos++) {
-					if (Main.listaUsuarios.get(pos).getCod_usu() == Integer.parseInt(textField.getText())) {
-						found = true;
-
-						Main.filadev = funcMain.mostrar(pos);
-
-						Main.btnEliminar.setEnabled(true);
-						Main.btnModificar.setEnabled(true);
-						dispose();
-					}
-
-				}
-				if (found == false) {
+				UsuarioDTO usuario = new UsuarioDAO().buscar(Integer.parseInt(textField.getText()));
+				if (usuario == null) {
 					JOptionPane.showMessageDialog(null, "no se encontron ningun articulo asi", "Error",
 							JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				funcMain.mostrar(usuario);
+				Main.btnEliminar.setEnabled(true);
+				Main.btnModificar.setEnabled(true);
+				dispose();
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(null, "Mete un Codigo", "Aviso", JOptionPane.WARNING_MESSAGE);
 			}

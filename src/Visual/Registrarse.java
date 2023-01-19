@@ -6,6 +6,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -13,7 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import Funciones.funcLogin;
 import Funciones.funcMain;
+import ModeloBD_DAO.UsuarioDAO;
+import ModeloBD_DTO.UsuarioDTO;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -216,6 +220,7 @@ public class Registrarse extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
 
 		if (btnAceptar == e.getSource()) {
 			if (textMail.getText().equals("") || textName.getText().equals("") || textLastName.getText().equals("")
@@ -228,32 +233,38 @@ public class Registrarse extends JFrame implements ActionListener {
 				textMail.setText("");
 				return;
 			}
-			for (int i = 0; i < miMain.listaUsuarios.size(); i++) {
-				if (miMain.listaUsuarios.get(i).getMail().equals(textMail.getText())) {
-					JOptionPane.showMessageDialog(null, "Ya exisite ese correo", "Aviso", JOptionPane.WARNING_MESSAGE);
+
+			ArrayList<UsuarioDTO> listaUsuarios = usuarioDAO.listarTodos();
+			for (UsuarioDTO usuario : listaUsuarios) {
+				if (usuario.getMail().equals(textMail.getText())) {
+					JOptionPane.showMessageDialog(null, "Ya exisite ese correo", "Aviso",
+							JOptionPane.WARNING_MESSAGE);
 					textMail.setText("");
 					textMail.grabFocus();
 					return;
 				}
 			}
 			try {
-				funcMain.AddUsu(miMain.listaUsuarios, miMain.fichero, textName.getText(), textLastName.getText(),
-						textPassword.getText(), "Gerente", textMail.getText(), Login.conectado);
-				funcMain.GuardarLista(miMain.listaUsuarios, miMain.fichero);
-				miMain.dispose();
-				JOptionPane.showMessageDialog(null, "Ya se ha registrado. Gracias");
+				UsuarioDTO u = new UsuarioDTO(0, textName.getText(), textLastName.getText(), textMail.getText(),
+						textPassword.getText(),
+						"Gerente");
+				if (usuarioDAO.insertar(u) != null) {
+					miMain.dispose();
+					JOptionPane.showMessageDialog(null, "Ya se ha registrado. Gracias");
+					Login miLogin = new Login();
+					funcLogin.mail = textMail.getText();
+					miLogin.setVisible(true);
+					dispose();
+				}
 
-				Login miLogin = new Login();
-				miLogin.setVisible(true);
-				dispose();
 			} catch (SQLException e1) {
-
 				e1.printStackTrace();
 			}
-
 		}
 
-		if (btnSalir == e.getSource()) {
+		if (btnSalir == e.getSource())
+
+		{
 			try {
 				Login miLogin = new Login();
 				miLogin.setVisible(true);

@@ -49,14 +49,7 @@ public class Login extends JFrame implements ActionListener {
 	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-		int resp = JOptionPane.showConfirmDialog(null, "Quiere conectarse al servidor?", "Conexion",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-		if (resp == 0) {
-			conectado = true;
-			System.out.print("conectado");
-			funcLogin.Conectar();
-		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -238,51 +231,24 @@ public class Login extends JFrame implements ActionListener {
 			}
 
 		}
-		if (conectado) {
-			if (btnEntrar == e.getSource()) {
-				Main miMain;
-				try {
-					miMain = new Main();
-					
-					if (funcLogin.cargarServer(textField.getText(), passwordField.getText()) == true) {
-						JOptionPane.showMessageDialog(null, "Datos correctos, bienvenido", "Bienvenido",
-								JOptionPane.INFORMATION_MESSAGE);
-						miMain.setVisible(true);
-						dispose();
-					} else
-						JOptionPane.showMessageDialog(null, "Usuario no valido", "Error", JOptionPane.WARNING_MESSAGE);
-
-					textField.setText("");
-					passwordField.setText("");
-					textField.grabFocus();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		} else {
-			if (btnEntrar == e.getSource()) {
-				Main miMain;
-				try {
-					miMain = new Main();
-					for (UsuarioDTO u : miMain.listaUsuarios) {
-						if (u.getMail().equals(textField.getText()) && u.getPassword().equals(passwordField.getText())
-								&& u.getCategoria().equals("Gerente")) {
-							miMain.mailActual = u.getMail();
-							miMain.setVisible(true);
-							dispose();
-							return;
-						}
-					}
+		if (btnEntrar == e.getSource()) {
+			Main miMain;
+			try {
+				miMain = new Main();
+				if (funcLogin.cargarServer(textField.getText(), passwordField.getText())) {
+					JOptionPane.showMessageDialog(null, "Datos correctos, bienvenido", "Bienvenido",
+							JOptionPane.INFORMATION_MESSAGE);
+					miMain.setVisible(true);
+					funcLogin.mail = textField.getText();
+					dispose();
+				} else
 					JOptionPane.showMessageDialog(null, "Usuario no valido", "Error", JOptionPane.WARNING_MESSAGE);
-					textField.setText("");
-					passwordField.setText("");
-					textField.grabFocus();
-				} catch (ClassNotFoundException | IOException e1) {
-					e1.printStackTrace();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
 
+				textField.setText("");
+				passwordField.setText("");
+				textField.grabFocus();
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 		}
 	}
