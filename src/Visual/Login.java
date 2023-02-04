@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Funciones.funcLogin;
-import ModeloBD_DTO.UsuarioDTO;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;

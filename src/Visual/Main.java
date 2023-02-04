@@ -7,7 +7,6 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
