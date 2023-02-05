@@ -60,6 +60,7 @@ public class Main extends JFrame implements ActionListener {
 	private JButton btnLimpiar;
 	public static JTextField textMail;
 	public static String mailActual;
+	private JButton btFichajes;
 
 	public Main() throws ClassNotFoundException, IOException, SQLException {
 		setTitle("Ventana Principal");
@@ -148,7 +149,7 @@ public class Main extends JFrame implements ActionListener {
 		btnAnadir = new JButton("Añadir");
 		btnAnadir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAnadir.setBorder(null);
-		btnAnadir.setBounds(559, 145, 139, 56);
+		btnAnadir.setBounds(560, 164, 139, 56);
 		contentPane.add(btnAnadir);
 		btnAnadir.setFont(new Font("Roboto", Font.BOLD, 19));
 		btnAnadir.setForeground(new Color(10, 10, 31));
@@ -169,7 +170,7 @@ public class Main extends JFrame implements ActionListener {
 		btnModificar = new JButton("Modificar");
 		btnModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnModificar.setBorder(null);
-		btnModificar.setBounds(559, 225, 139, 56);
+		btnModificar.setBounds(560, 244, 139, 56);
 		contentPane.add(btnModificar);
 		btnModificar.setForeground(new Color(10, 10, 31));
 		btnModificar.setFont(new Font("Roboto", Font.BOLD, 19));
@@ -191,7 +192,7 @@ public class Main extends JFrame implements ActionListener {
 		btnEliminar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnEliminar.setBorder(null);
 		btnEliminar.setEnabled(false);
-		btnEliminar.setBounds(559, 306, 139, 56);
+		btnEliminar.setBounds(560, 325, 139, 56);
 		contentPane.add(btnEliminar);
 		btnEliminar.setForeground(new Color(10, 10, 31));
 		btnEliminar.setFont(new Font("Roboto", Font.BOLD, 19));
@@ -374,8 +375,34 @@ public class Main extends JFrame implements ActionListener {
 		btnLimpiar.setFont(new Font("Roboto", Font.BOLD, 19));
 		btnLimpiar.setBorder(null);
 		btnLimpiar.setBackground(new Color(255, 112, 10));
-		btnLimpiar.setBounds(559, 389, 139, 56);
+		btnLimpiar.setBounds(560, 408, 139, 56);
 		contentPane.add(btnLimpiar);
+		
+		btFichajes = new JButton("Fichajes");
+		btFichajes.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        new Fichar().setVisible(true);
+		    }
+		});
+		btFichajes.setForeground(new Color(10, 10, 31));
+		btFichajes.setFont(new Font("Roboto", Font.BOLD, 19));
+        btFichajes.setBorder(null);
+        btFichajes.setBackground(new Color(255, 112, 10));
+        btFichajes.setBounds(559, 83, 139, 56);
+        contentPane.add(btFichajes);
+        btFichajes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btFichajes.setBackground(new Color(10, 10, 31));
+                btFichajes.setForeground(new Color(255, 112, 10));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btFichajes.setBackground(new Color(255, 112, 10));
+                btFichajes.setForeground(new Color(10, 10, 31));
+
+            }
+        });
+		
 		btnLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
 				btnLimpiar.setBackground(new Color(10, 10, 31));

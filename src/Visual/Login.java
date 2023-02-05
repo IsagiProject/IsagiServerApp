@@ -237,7 +237,11 @@ public class Login extends JFrame implements ActionListener {
 				if (funcLogin.cargarServer(textField.getText(), passwordField.getText())) {
 					JOptionPane.showMessageDialog(null, "Datos correctos, bienvenido", "Bienvenido",
 							JOptionPane.INFORMATION_MESSAGE);
-					miMain.setVisible(true);
+					if (funcLogin.categoria.equals("Gerente")) {
+						miMain.setVisible(true);
+					} else {
+						new Fichar().setVisible(true);
+					}
 					funcLogin.mail = textField.getText();
 					dispose();
 				} else
