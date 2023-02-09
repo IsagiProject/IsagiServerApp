@@ -1,67 +1,61 @@
 package Conexiones;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Server extends Thread{
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+
+public class Server {
 
     static final int PUERTO = 5000;
     public static final String END_WORD = "END";
     public static final String CSV_NAME = "log.csv";
 
     static ArrayList<ClienteCustom> clientes = new ArrayList<ClienteCustom>();
-    
-    public void run() {
-    	try (ServerSocket server = new ServerSocket(PUERTO)) {
-            System.out.println("Servidor iniciado en el puerto " + PUERTO);
 
-            // Acepta conexiones de clientes
-            while (true) {
-                Socket cliente = server.accept();
-
-                // Obtenemos el input para recibir el nombre de usuario como primer mensaje.
-                // No se cierra el in porque no se puede reabrir
-                DataInputStream in = new DataInputStream(cliente.getInputStream());
-                String user = in.readUTF();
-
-                Server.logConnection(user);
-
-                // Creamos el cliente y lo guardamos en la lista
-                ClienteCustom cl = new ClienteCustom(user, cliente);
-                clientes.add(cl);
-                System.out.println("Cliente conectado desde " + cliente.getInetAddress() + ":" + cliente.getPort());
-
-                // Comienza el hilo que se encarga de recibir los mensajes del cliente
-                ServerThread hilo = new ServerThread(cl);
-                hilo.start();
-            }
-        } catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
     public Server() {
+
+        System.setProperty("javax.net.ssl.keyStore", "certificados/almacenssl");
+        System.setProperty("javax.net.ssl.keyStorePassword", "1234567");
+
         try {
             // Se crea el socket del servidor
-            try (ServerSocket server = new ServerSocket(PUERTO)) {
+            SSLServerSocketFactory sfact = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            try (SSLServerSocket server = (SSLServerSocket) sfact.createServerSocket(PUERTO);) {
                 System.out.println("Servidor iniciado en el puerto " + PUERTO);
 
                 // Acepta conexiones de clientes
                 while (true) {
-                    Socket cliente = server.accept();
+                    SSLSocket cliente = (SSLSocket) server.accept();
 
                     // Obtenemos el input para recibir el nombre de usuario como primer mensaje.
                     // No se cierra el in porque no se puede reabrir
                     DataInputStream in = new DataInputStream(cliente.getInputStream());
                     String user = in.readUTF();
-
+                    System.out.println(user);
+                    // if (!userAuthorized(user)) {
+                    // System.out.println("Cliente cerrado");
+                    // DataOutputStream out = new DataOutputStream(cliente.getOutputStream());
+                    // // create new thread
+                    // new Thread(new Runnable() {
+                    // @Override
+                    // public void run() {
+                    // try {
+                    // Thread.sleep(500);
+                    // out.writeUTF("Usuario no autorizado");
+                    // cliente.close();
+                    // } catch (Exception e) {
+                    // e.printStackTrace();
+                    // }
+                    // }
+                    // }).start();
+                    // continue;
+                    // }
                     Server.logConnection(user);
 
                     // Creamos el cliente y lo guardamos en la lista
@@ -84,7 +78,7 @@ public class Server extends Thread{
      * 
      * @param user
      */
-    public static synchronized void logConnection(String user) {
+    public static void logConnection(String user) {
         try {
             FileWriter fw = new FileWriter(CSV_NAME, true);
             fw.append(user + "," + LocalDateTime.now() + ",C\n");
@@ -107,22 +101,6 @@ public class Server extends Thread{
         } catch (Exception e) {
             System.out.println("Error al escribir en el log");
         }
-    }
-
-    public static void readCSV() {
-        String row;
-        try {
-            BufferedReader csvReader = new BufferedReader(new FileReader(CSV_NAME));
-            while ((row = csvReader.readLine()) != null) {
-                // 0: user 1: LocalDateTime 2: C/D
-                String[] data = row.split(",");
-                // do something with the data
-            }
-            csvReader.close();
-        } catch (Exception e) {
-            System.out.println("Error al leer el archivo");
-        }
-
     }
 
     /**
@@ -160,9 +138,9 @@ public class Server extends Thread{
         }
     }
 
-//    public static void main(String[] args) {
-//        new Server();
-//    }
+    public static void main(String[] args) {
+        new Server();
+    }
 }
 
 class ServerThread extends Thread {
@@ -196,4 +174,5 @@ class ServerThread extends Thread {
         } catch (Exception e) {
         }
     }
+
 }

@@ -2,64 +2,61 @@ package Conexiones;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import Visual.Chat;
+
 public class Cliente {
-    public static final String END_WORD = "END";
+	public static final String END_WORD = "END";
+	public Socket socket;
+	public DataOutputStream out;
+	public ClienteThread hilo;
+	public Chat chat;
+	public Cliente(Chat chat) {
+		this.chat=chat;
+		System.setProperty("javax.net.ssl.trustStore", "certificados/usuarioalmacenssl");
+		System.setProperty("javax.net.ssl.trustStorePassword", "890123");
+		SSLSocketFactory sfact = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		try {
+			this.socket = (SSLSocket) sfact.createSocket("localhost", 5000);
+			this.hilo = new ClienteThread(socket, this.chat);
+			this.hilo.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    public Cliente() {
-        try {
-            Socket socket = new Socket("localhost", 5000);
-            ClienteThread hilo = new ClienteThread(socket);
-            hilo.start();
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeUTF("");
-            Scanner sc = new Scanner(System.in);
-            while (true) {
-                String mensaje = sc.nextLine();
-                out.writeUTF(mensaje);
-                if (mensaje.equals(END_WORD)) {
-                    break;
-                }
-            }
-            sc.close();
-            out.close();
-            socket.close();
-        } catch (Exception e) {
+	public String sendMessage(String mensaje) {
+		try {
+			
+			this.out = new DataOutputStream(this.socket.getOutputStream());
+			this.out.writeUTF(mensaje);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+		return mensaje;
 
-        }
-    }
+	}
+	
 
-    public static void main(String[] args) {
-        new Cliente();
-    }
+	public void close() {
+		try {
+			this.out.close();
+			this.socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }
-
-class ClienteThread extends Thread {
-
-    private Socket socket;
-
-    public ClienteThread(Socket socket) {
-        this.socket = socket;
-    }
-
-    @Override
-    public void run() {
-        try {
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            while (true) {
-                String mensaje = in.readUTF();
-                if (mensaje.equals(Cliente.END_WORD)) {
-                    socket.close();
-                    System.out.println("Cerrando cliente " + socket.getPort());
-                    break;
-                }
-                System.out.println(mensaje);
-            }
-            in.close();
-        } catch (Exception e) {
-
-        }
-    }
-}
+ 
