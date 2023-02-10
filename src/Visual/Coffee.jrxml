@@ -13,7 +13,7 @@ cmlvcyAsMTM1LDE1LDlmMThjMDUyLTA4YjktNGViYi1hYTY5LTg1Y2RjMTUxZWQzZDs=]]>
 	<style name="Row" mode="Transparent">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-			<style backcolor="#E6DAC3"/>
+			<style backcolor="#FABF8C"/>
 		</conditionalStyle>
 	</style>
 	<queryString language="SQL">
@@ -62,15 +62,15 @@ GROUP BY isagi.fichajes.id_usuario]]>
 		<groupHeader>
 			<band height="37">
 				<frame>
-					<reportElement mode="Opaque" x="-21" y="7" width="597" height="24" forecolor="#B89F7D" backcolor="#F2EBDF" uuid="df26104b-a7fc-458f-8a21-50b13c7c7736"/>
+					<reportElement mode="Opaque" x="-21" y="7" width="597" height="24" forecolor="#B89F7D" backcolor="#212833" uuid="df26104b-a7fc-458f-8a21-50b13c7c7736"/>
 					<rectangle>
-						<reportElement mode="Opaque" x="21" y="0" width="36" height="24" backcolor="#736343" uuid="369745f3-8095-4b8b-8b7a-38e42b7aef67"/>
+						<reportElement mode="Opaque" x="21" y="0" width="36" height="24" forecolor="#FA751C" backcolor="#FA751C" uuid="369745f3-8095-4b8b-8b7a-38e42b7aef67"/>
 						<graphicElement>
 							<pen lineWidth="0.0"/>
 						</graphicElement>
 					</rectangle>
 					<textField>
-						<reportElement style="SubTitle" x="68" y="0" width="413" height="24" forecolor="#736343" uuid="ef0a10c7-2940-4ac1-a69e-db1a00ae6f2e"/>
+						<reportElement style="SubTitle" mode="Opaque" x="68" y="0" width="413" height="24" forecolor="#FA751C" backcolor="#212833" uuid="ef0a10c7-2940-4ac1-a69e-db1a00ae6f2e"/>
 						<textElement>
 							<font isBold="true"/>
 						</textElement>
@@ -94,11 +94,13 @@ GROUP BY isagi.fichajes.id_usuario]]>
 			</image>
 			<staticText>
 				<reportElement style="Title" x="170" y="0" width="263" height="62" uuid="1a652692-054a-40f3-ade5-68d8da36626d"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
 				<text><![CDATA[ISAGI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="SubTitle" x="219" y="62" width="196" height="22" uuid="88d4231e-f014-4b0d-b871-1737ba63a1ae"/>
+				<reportElement style="SubTitle" x="219" y="62" width="196" height="22" forecolor="#CF6617" uuid="88d4231e-f014-4b0d-b871-1737ba63a1ae"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -122,31 +124,31 @@ GROUP BY isagi.fichajes.id_usuario]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="0" y="0" width="111" height="15" forecolor="#736343" uuid="5a140488-51fd-4f4b-a21b-2d7049bfcafd">
+				<reportElement style="Column header" x="0" y="0" width="80" height="15" forecolor="#FA751C" uuid="5a140488-51fd-4f4b-a21b-2d7049bfcafd">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c5edf90a-9be5-4b71-82eb-c1bc51b377fa"/>
 				</reportElement>
 				<text><![CDATA[ID Usuario]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="111" y="0" width="111" height="15" forecolor="#736343" uuid="8effc12b-bb8b-4acb-bf56-fb8580c27c73">
+				<reportElement style="Column header" x="80" y="0" width="111" height="15" forecolor="#FA751C" uuid="8effc12b-bb8b-4acb-bf56-fb8580c27c73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9db5a546-2720-46c9-9935-b3eef839c311"/>
 				</reportElement>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="222" y="0" width="111" height="15" forecolor="#736343" uuid="3d02c564-81e4-4d70-945f-5ae0a9fa21ff">
+				<reportElement style="Column header" x="191" y="0" width="111" height="15" forecolor="#FA751C" uuid="3d02c564-81e4-4d70-945f-5ae0a9fa21ff">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6c14b638-4863-45b5-a316-4fdbfbc73a1a"/>
 				</reportElement>
 				<text><![CDATA[Apellido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="333" y="0" width="111" height="15" forecolor="#736343" uuid="f60a0e27-cce0-4371-a78d-ab6277272574">
+				<reportElement style="Column header" x="302" y="0" width="138" height="15" forecolor="#FA751C" uuid="f60a0e27-cce0-4371-a78d-ab6277272574">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c3dfec6-87dc-48be-af3a-da8d005325b9"/>
 				</reportElement>
 				<text><![CDATA[Mail]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="444" y="0" width="111" height="15" forecolor="#736343" uuid="f04e3cbe-433e-4321-99d1-b286ba47147f">
+				<reportElement style="Column header" x="440" y="0" width="115" height="15" forecolor="#FA751C" uuid="f04e3cbe-433e-4321-99d1-b286ba47147f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="30f5fa66-82b2-469b-b7d1-42be32798055"/>
 				</reportElement>
 				<text><![CDATA[Tiempo trabajado]]></text>
@@ -158,31 +160,31 @@ GROUP BY isagi.fichajes.id_usuario]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="a98495d8-3c8d-4fa0-81f5-30c3efc2f766"/>
 				<textField textAdjust="StretchHeight">
-					<reportElement style="Detail" x="0" y="0" width="111" height="15" uuid="e9cc2599-8165-4eb0-baec-b59e02f29e29">
+					<reportElement style="Detail" x="0" y="0" width="80" height="15" uuid="e9cc2599-8165-4eb0-baec-b59e02f29e29">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c5edf90a-9be5-4b71-82eb-c1bc51b377fa"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{id_usuario}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement style="Detail" x="111" y="0" width="111" height="15" uuid="0bce819c-aee2-49c6-8760-63567ceb7881">
+					<reportElement style="Detail" x="80" y="0" width="111" height="15" uuid="0bce819c-aee2-49c6-8760-63567ceb7881">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9db5a546-2720-46c9-9935-b3eef839c311"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{nom_usu}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement style="Detail" x="222" y="0" width="111" height="15" uuid="6cd32ee3-a045-47c9-942b-d6df39fa5f50">
+					<reportElement style="Detail" x="191" y="0" width="111" height="15" uuid="6cd32ee3-a045-47c9-942b-d6df39fa5f50">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6c14b638-4863-45b5-a316-4fdbfbc73a1a"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{ape_usu}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement style="Detail" x="333" y="0" width="111" height="15" uuid="76f2265e-7ab8-43c6-86ba-110f9f7f0e9d">
+					<reportElement style="Detail" x="302" y="0" width="131" height="15" uuid="76f2265e-7ab8-43c6-86ba-110f9f7f0e9d">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c3dfec6-87dc-48be-af3a-da8d005325b9"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{mail}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement style="Detail" x="444" y="0" width="111" height="15" uuid="36e03f22-9890-4a37-9b0e-fe0335cfe140">
+					<reportElement style="Detail" x="440" y="0" width="115" height="15" uuid="36e03f22-9890-4a37-9b0e-fe0335cfe140">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="30f5fa66-82b2-469b-b7d1-42be32798055"/>
 					</reportElement>
 					<textFieldExpression><![CDATA[$F{tiempo}]]></textFieldExpression>
@@ -203,23 +205,23 @@ GROUP BY isagi.fichajes.id_usuario]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="183682bc-d976-4756-83e0-6625a3f98ed1"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="rgba(245, 171, 115, 0.09803922)" backcolor="#FAB987" uuid="183682bc-d976-4756-83e0-6625a3f98ed1"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="0193f9b3-1559-491a-8580-b6988863b6a1"/>
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#212833" uuid="0193f9b3-1559-491a-8580-b6988863b6a1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="d00b105e-494b-418b-8ac9-8b1b4824f4f0"/>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#212833" uuid="d00b105e-494b-418b-8ac9-8b1b4824f4f0"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE dd MMMMM yyyy">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="0616f3fe-0354-456f-8911-ec30ec51a5ae"/>
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#212833" uuid="0616f3fe-0354-456f-8911-ec30ec51a5ae"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
