@@ -379,32 +379,32 @@ public class Main extends JFrame implements ActionListener {
 		btnLimpiar.setBackground(new Color(255, 112, 10));
 		btnLimpiar.setBounds(560, 357, 139, 56);
 		contentPane.add(btnLimpiar);
-		
+
 		btFichajes = new JButton("Fichajes");
 		btFichajes.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        new Fichar().setVisible(true);
-		    }
+			public void actionPerformed(ActionEvent e) {
+				new Fichar().setVisible(true);
+			}
 		});
 		btFichajes.setForeground(new Color(10, 10, 31));
 		btFichajes.setFont(new Font("Roboto", Font.BOLD, 19));
-        btFichajes.setBorder(null);
-        btFichajes.setBackground(new Color(255, 112, 10));
-        btFichajes.setBounds(559, 83, 139, 56);
-        contentPane.add(btFichajes);
-        btFichajes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btFichajes.setBackground(new Color(10, 10, 31));
-                btFichajes.setForeground(new Color(255, 112, 10));
-            }
+		btFichajes.setBorder(null);
+		btFichajes.setBackground(new Color(255, 112, 10));
+		btFichajes.setBounds(559, 83, 139, 56);
+		contentPane.add(btFichajes);
+		btFichajes.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				btFichajes.setBackground(new Color(10, 10, 31));
+				btFichajes.setForeground(new Color(255, 112, 10));
+			}
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btFichajes.setBackground(new Color(255, 112, 10));
-                btFichajes.setForeground(new Color(10, 10, 31));
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				btFichajes.setBackground(new Color(255, 112, 10));
+				btFichajes.setForeground(new Color(10, 10, 31));
 
-            }
-        });
-		
+			}
+		});
+
 		btnLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
 				btnLimpiar.setBackground(new Color(10, 10, 31));
@@ -424,29 +424,28 @@ public class Main extends JFrame implements ActionListener {
 		btnMostrar.addActionListener(this);
 
 		table.getRowSelectionAllowed();
-		
-		
+
 		btnChat = new JButton("Chat");
-        btnChat.setForeground(new Color(10, 10, 31));
-        btnChat.setFont(new Font("Roboto", Font.BOLD, 19));
-        btnChat.setBorder(null);
-        btnChat.addActionListener(this);
-        btnChat.setBackground(new Color(255, 112, 10));
-        btnChat.setBounds(560, 426, 139, 56);
-        btnChat.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnChat.setBackground(new Color(10, 10, 31));
-                btnChat.setForeground(new Color(255, 112, 10));
-            }
+		btnChat.setForeground(new Color(10, 10, 31));
+		btnChat.setFont(new Font("Roboto", Font.BOLD, 19));
+		btnChat.setBorder(null);
+		btnChat.addActionListener(this);
+		btnChat.setBackground(new Color(255, 112, 10));
+		btnChat.setBounds(560, 426, 139, 56);
+		btnChat.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				btnChat.setBackground(new Color(10, 10, 31));
+				btnChat.setForeground(new Color(255, 112, 10));
+			}
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnChat.setBackground(new Color(255, 112, 10));
-                btnChat.setForeground(new Color(10, 10, 31));
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				btnChat.setBackground(new Color(255, 112, 10));
+				btnChat.setForeground(new Color(10, 10, 31));
 
-            }
-        });
+			}
+		});
 
-        contentPane.add(btnChat);
+		contentPane.add(btnChat);
 	}
 
 	@Override
@@ -487,13 +486,13 @@ public class Main extends JFrame implements ActionListener {
 			}
 
 			if (btnEliminar == e.getSource()) {
-				handleDetele();
+				handleDelete();
 			}
-			
-			if(btnChat == e.getSource()) {
-	            Chat chat = new Chat();
-	            chat.setVisible(true);
-	        }
+
+			if (btnChat == e.getSource()) {
+				Chat chat = new Chat();
+				chat.setVisible(true);
+			}
 
 			if (btnLimpiar == e.getSource()) {
 				handleClear();
@@ -569,14 +568,19 @@ public class Main extends JFrame implements ActionListener {
 
 	}
 
-	private void handleDetele() {
+	private void handleDelete() {
 		int resp = JOptionPane.showConfirmDialog(null, "Seguro que quiere borrar este Registro?", "Aviso",
 				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		if (resp == 0) {
+			if (Main.selectedMail.equals(funcLogin.mail)) {
+				JOptionPane.showMessageDialog(null, "No puede borrar su cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			btnModificar.setEnabled(false);
 			usuarioDAO.borrar(selectedId);
 		}
 		resetModifyDelete();
+		funcMain.actualizarTabla();
 	}
 
 	private void handleExit() {

@@ -27,7 +27,7 @@ public class Cliente {
 		System.setProperty("javax.net.ssl.trustStorePassword", "890123");
 		SSLSocketFactory sfact = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		try {
-			this.socket = (SSLSocket) sfact.createSocket("localhost", 5000);
+			this.socket = (SSLSocket) sfact.createSocket("18.100.130.52", 5000);
 			this.hilo = new ClienteThread(socket, this.chat);
 			this.hilo.start();
 		} catch (Exception e) {
