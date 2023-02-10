@@ -1,17 +1,11 @@
 package Conexiones;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import Visual.Chat;
 
@@ -21,8 +15,9 @@ public class Cliente {
 	public DataOutputStream out;
 	public ClienteThread hilo;
 	public Chat chat;
+
 	public Cliente(Chat chat) {
-		this.chat=chat;
+		this.chat = chat;
 		System.setProperty("javax.net.ssl.trustStore", "certificados/usuarioalmacenssl");
 		System.setProperty("javax.net.ssl.trustStorePassword", "890123");
 		SSLSocketFactory sfact = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -37,26 +32,23 @@ public class Cliente {
 
 	public String sendMessage(String mensaje) {
 		try {
-			
+
 			this.out = new DataOutputStream(this.socket.getOutputStream());
 			this.out.writeUTF(mensaje);
-			}catch (Exception e) {
-				// TODO: handle exception
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return mensaje;
 
 	}
-	
 
 	public void close() {
 		try {
 			this.out.close();
 			this.socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
- 
