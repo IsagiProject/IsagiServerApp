@@ -62,9 +62,6 @@ public class funcMain {
 	public static void EliminarUsu(ArrayList<UsuarioDTO> listaUsuarios, File fichero, int usu, boolean conectado) {
 		int codusu = 1000000;
 		try {
-			// TODO Get selected row, find user by id. Compare if the mail is the same or
-			// not
-
 			codusu = listaUsuarios.get(usu).getCod_usu();
 			if (listaUsuarios.get(usu).getMail().equals(funcLogin.mail)) {
 				JOptionPane.showMessageDialog(null, "No puedes borrar al ususario con el que has iniciado sesion",
@@ -90,7 +87,6 @@ public class funcMain {
 		}
 
 	}
-
 
 	// TODO REMOVE
 	public static void GuardarLista(ArrayList<UsuarioDTO> listaUsuarios, File fichero) throws SQLException {
