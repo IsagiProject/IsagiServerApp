@@ -1,10 +1,8 @@
 package ModeloBD_DTO;
 
-import java.io.Serializable;
-
 import Usuarios.Persona;
 
-public class UsuarioDTO extends Persona implements Serializable {
+public class UsuarioDTO extends Persona {
 
 	private static final long serialVersionUID = 1L;
 	int cod_usu;
