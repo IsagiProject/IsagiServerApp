@@ -95,7 +95,7 @@ GROUP BY isagi.fichajes.id_usuario]]>
 			<staticText>
 				<reportElement style="Title" x="170" y="0" width="263" height="62" uuid="1a652692-054a-40f3-ade5-68d8da36626d"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman"/>
+					<font fontName="Roboto"/>
 				</textElement>
 				<text><![CDATA[ISAGI]]></text>
 			</staticText>
